@@ -38,11 +38,15 @@ public class Configuration {
 	
 	public static String getADBPath()
 	{
-		return getAndroidSDKPath() + "/platform-tools/adb";
+		if(System.getProperty("os.name").contains("linux"))
+			return getAndroidSDKPath() + "/platform-tools/adb";
+		return getAndroidSDKPath() + "/platform-tools/adb.exe";
 	}
 	
 	public static String getAndroidPath()
 	{
-		return getAndroidSDKPath() + "/tools/android";
+		if(System.getProperty("os.name").contains("linux"))
+			return getAndroidSDKPath() + "/tools/android";
+		return getAndroidSDKPath() + "/tools/android.bat";
 	}
 }

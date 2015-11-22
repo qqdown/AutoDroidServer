@@ -18,6 +18,8 @@ import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
+import edu.nju.autodroid.utils.Logger;
+
 
 public class ActivityTree 
 {
@@ -28,7 +30,7 @@ public class ActivityTree
 		try{
 			DocumentBuilderFactory dbf = DocumentBuilderFactory.newInstance();
 			DocumentBuilder builder = dbf.newDocumentBuilder();
-			Document doc = builder.parse(new ByteArrayInputStream(activityXML.getBytes()));
+			Document doc = builder.parse(new ByteArrayInputStream(activityXML.getBytes("utf-8")));
 			Element rootEle = doc.getDocumentElement();
 			if(rootEle == null)
 				return;
@@ -37,7 +39,6 @@ public class ActivityTree
 			for(int i=0; i<nodes.getLength(); i++){
 				Node node = nodes.item(i);
 				if(node != null && node.getNodeType() == Node.ELEMENT_NODE){
-					System.out.println(node.getAttributes().getNamedItem("class").getNodeValue());
 					ActivityNode an = parseActivityNode(node);
 					an.indexXpath = an.index + "";
 					root.addChild(an);
@@ -45,7 +46,7 @@ public class ActivityTree
 				}
 			}
 		}catch(Exception e){
-			e.printStackTrace();
+			Logger.logException(e);
 		}
 	}
 	
@@ -108,7 +109,6 @@ public class ActivityTree
 		for(int i=0; i<nodes.getLength(); i++){
 			Node node = nodes.item(i);
 			if(node != null && node.getNodeType() == Node.ELEMENT_NODE){
-				System.out.println(node.getAttributes().getNamedItem("class").getNodeValue());
 				ActivityNode an = parseActivityNode(node);
 				an.indexXpath = parent.indexXpath + " " + an.index;
 				parent.addChild(an);

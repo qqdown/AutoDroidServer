@@ -25,6 +25,7 @@ import edu.nju.autodroid.utils.AdbConnection;
 import edu.nju.autodroid.utils.AdbHelper;
 import edu.nju.autodroid.utils.CmdExecutor;
 import edu.nju.autodroid.utils.Configuration;
+import edu.nju.autodroid.utils.Logger;
 
 public class Server {
 	public static final String TAG = "server";  
@@ -33,36 +34,19 @@ public class Server {
 
 	public static void main(String[] args) throws TimeoutException, AdbCommandRejectedException, IOException, InterruptedException, ShellCommandUnresponsiveException {
 
-		//System.out.println(Configration.getProperty("android_jar_version"));
-		//CmdExecutor.execCmd("sh -c ant")i;
-		//UiAutomatorHelper helper = new UiAutomatorHelper();
-		//helper.BeginTest("demo", "edu.nju.autodroid.main.Main", "testDemo", 3);
-		//AdbHelper.initializeBridge();
-		//System.out.println(UiAutomatorHelper.getWorkSpase());
+		Logger.initalize("logger.txt");
 		AdbHelper.initializeBridge();
-		/*mDevice = AdbHelper.getDevice();
-		mDevice.createForward(PC_LOCAL_PORT, PHONE_PORT);
-		initializeConnection();*/
+
 		AdbConnection.initializeConnection(PC_LOCAL_PORT, PHONE_PORT);
-		String layout = AdbConnection.getLayout();
-		System.out.println(layout);
-		ActivityTree at = new ActivityTree(layout);
-		at.print();
-		at.forAll(new Consumer<ActivityNode>() {
-			
-			@Override
-			public void accept(ActivityNode t) {
-				if(t.focusable && t.className.contains("EditText")){
-					System.out.println("consumer: " + t.className);
-					AdbConnection.doSetText(t, "only english accepted");
-				}
-				
-				
-			}
-		});
-		System.out.println(AdbHelper.getFocusedActivity());
-		Thread.sleep(2000);
+		int count = 100;
+		while(count>0)
+		{
+			Logger.logInfo(AdbHelper.getFocusedActivity());
+			Thread.sleep(1000);
+		}
+		
 		
 		AdbHelper.terminateBridge();
+		Logger.endLogging();
 	}
 }

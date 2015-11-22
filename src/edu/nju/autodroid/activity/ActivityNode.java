@@ -23,11 +23,13 @@ public class ActivityNode {
 	public boolean selected;
 	public int[] bound;
 	public String indexXpath;
+	public int callIndex;
 	
 	public ActivityNode parent;
 	public List<ActivityNode> children;
 	
 	public ActivityNode(){
+		callIndex = 0;
 		bound = new int[4];
 		children = new ArrayList<ActivityNode>();
 	}

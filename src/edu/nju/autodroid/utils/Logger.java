@@ -5,6 +5,8 @@ package edu.nju.autodroid.utils;
  */
 import java.io.File;
 import java.io.PrintStream;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 /**
  * This is the public class for all logging functionality
@@ -19,6 +21,7 @@ public abstract class Logger {
 	private static final String errorPrefix = "ERROR:";
 	private static final String exceptionPrefix = "EXCEPTION:";
 	private static final String warningPrefix = "WARNING:";
+	private static final SimpleDateFormat DateFORMAT = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 
 	
 	/***
@@ -30,6 +33,7 @@ public abstract class Logger {
 			if (logFileName != null) {
 				try {
 					logobject = new PrintStream(new File(logFileName));
+					isInitialized = true;
 				} catch (Exception e) {
 					logobject = System.out;
 				}
@@ -90,8 +94,9 @@ public abstract class Logger {
 			System.out.println(e.getMessage());
 			System.out.flush();
 		} else {
+			e.printStackTrace(System.out);
 			e.printStackTrace(logobject);
-			logobject.println(e.getMessage());
+			logobject.println(DateFORMAT.format(new Date()) + "\t" + e.getMessage());
 			logobject.flush();
 		}
 	}
@@ -105,56 +110,15 @@ public abstract class Logger {
 	}
 
 	private static final synchronized void writeMsg(String msg) {
+		msg = DateFORMAT.format(new Date()) + "\t" + msg;
 		if (!isInitialized) {
 			System.out.printf("%s\n", msg);
 			System.out.flush();
 		} else {
+			System.out.printf("%s\n", msg);
+			System.out.flush();
 			logobject.printf("%s\n", msg);
 			logobject.flush();
 		}
 	}	
-	
-	
-	/***
-	 * This method ends the logging session and closes the log file
-	 * Note: This method must be called for proper closure of the provided log file
-	 * 
-	 */
-	public abstract void endLog();
-	
-	/***
-	 * This method logs Info messages
-	 * @param prefix The prefix that needs to be used while logging 
-	 * @param msg Target info message that needs to be logged
-	 */
-	
-	public abstract void logInfo(String prefix,String msg);
-	
-	/***
-	 * 
-	 * @param prefix The prefix that needs to be used while logging 
-	 * @param msg Target error message that needs to be logged
-	 */
-	public abstract void logError(String prefix,String msg);
-	
-	/***
-	 * 
-	  * @param prefix The prefix that needs to be used while logging 
-	 * @param msg Target exception message that needs to be logged
-	 */	
-	public abstract void logException(String prefix,String msg);
-	
-	/***
-	 * 
-	  * @param prefix The prefix that needs to be used while logging 
-	 * @param e The target exception that needs to be logged
-	 */
-	public abstract void logException(String prefix,Exception e);
-	
-	/***
-	 * 
-	  * @param prefix The prefix that needs to be used while logging 
-	 * @param msg Target warning message that needs to be logged
-	 */
-	public abstract void logWarning(String prefix,String msg);
 }
